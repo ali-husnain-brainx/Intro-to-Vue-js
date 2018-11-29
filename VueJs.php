@@ -33,22 +33,47 @@ function getUserList($mysqli, $limit) {
     <meta charset="UTF-8">
     <!-- import CSS -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .container{
+            width: 70%;
+            margin-left: 15%;
+        }
+        .header-ul li {
+            float: left;
+            padding: 16px;
+        }
+        .header-ul li a {
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
     <div class="container">
-        <my-form></my-form>
-        <my-table></my-table>
+        <div>
+            <ul class="header-ul" style="list-style-type:none">
+                <li><a href="VueJs.php">Home</a></li>
+                <li><a href="binding.php">Others</a></li>
+                <li><a href="vueTable.php">Vue Table 2</a></li>
+            </ul>
+        </div><br /><br /><br />
+        <my-form></my-form><br /><br /><br />
+        <el-switch
+                style="display: block"
+                v-model="value4"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="Show Table"
+                inactive-text="Hide Table">
+        </el-switch>
+        <div v-show = "value4">
+            <my-table></my-table>
+        </div>
     </div>
 </div>
-<style>
-    .container{
-        width: 50%;
-        margin-left: 25%;
-        margin-top: 10%;
-    }
-</style>
-</body>
+
 <!-- import Vue before Element -->
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <!-- import JavaScript -->
@@ -69,10 +94,10 @@ function getUserList($mysqli, $limit) {
 <script type="text/x-template" id="new-table">
     <el-table
             :data="tableData"
+            :page-size="2"
+            :pagination-props="{ pageSizes: [5, 10, 20] }"
             stripe
-            style="width: 100%"
-            :page-size="3"
-            :pagination-props="{ pageSizes: [3, 5, 8] }">
+            style="width: 100%">
         <el-table-column
                 prop="id"
                 label="ID"
@@ -131,7 +156,7 @@ function getUserList($mysqli, $limit) {
                     if (valid) {
                         $.get("index.php?limit=limit "+this.ruleForm2.limit, function(result){
                             console.log(result);
-                            nVue.$children[1].tableData = JSON.parse(result);
+                            nVue.$children[2].tableData = JSON.parse(result);
                         });
 
                     } else {
@@ -144,7 +169,7 @@ function getUserList($mysqli, $limit) {
                 this.$refs[formName].resetFields();
                 $.get("index.php?limit=", function(result){
                     console.log(result);
-                    nVue.$children[1].tableData = JSON.parse(result);
+                    nVue.$children[2].tableData = JSON.parse(result);
                 });
             }
         }
@@ -166,9 +191,11 @@ function getUserList($mysqli, $limit) {
         },
         data: function() {
             return {
+                value4: true
             }
         }
     })
 </script>
 
+</body>
 </html>
